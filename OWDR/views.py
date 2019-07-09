@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -11,7 +12,7 @@ from OWDR.forms import *
 
 class LandingPageView(LoginRequiredMixin, View):
     login_url = 'login'
-    redirect_field_name = 'redirect_to'
+    redirect_field_name = 'next'
 
     def get(self, request):
         return render(request, 'OWDR/index.html')
@@ -30,7 +31,10 @@ class LoginView(View):
             if user is not None:
                 login(request, user)
                 next_ = request.GET.get('next')
+                print(user.is_staff)
                 if next_ is not None:
+                    if user.is_staff:
+                        next_ = reverse_lazy('staff')
                     return redirect(next_)
                 else:
                     return redirect(reverse_lazy('landing_page'))
@@ -47,3 +51,8 @@ class RegisterView(View):
 class FormView(View):
     def get(self, request):
         return render(request, 'OWDR/form.html')
+
+
+class StaffView(View):
+    def get(self, request):
+        return HttpResponse('staff')
