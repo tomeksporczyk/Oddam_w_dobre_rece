@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'Oddam_w_dobre_rece.wsgi.application'
 DATABASES = {
     'default': {
         'HOST': '127.0.0.1',
-        'NAME': 'OWDR',
+        'NAME': 'OWDR1',
         'ENGINE': 'django.db.backends.postgresql',
         'USER': POSTGRES_USER,
         'PASSWORD': POSTGRES_PASSWORD,
@@ -126,3 +126,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+AUTH_USER_MODEL = 'OWDR.User'
