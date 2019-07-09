@@ -20,7 +20,7 @@ class LandingPageView(LoginRequiredMixin, View):
 
 class LoginView(View):
     def get(self, request):
-        return render(request, 'OWDR/login.html', context={'form': LoginForm()})
+        return render(request, 'OWDR/login.html', context={'form': LoginForm().as_p()})
 
     def post(self, request):
         form = LoginForm(request.POST)
@@ -45,7 +45,18 @@ class LoginView(View):
 
 class RegisterView(View):
     def get(self, request):
-        return render(request, 'OWDR/register.html')
+        form = RegistrationForm().as_p()
+        context = {'form': form}
+        return render(request, 'OWDR/register.html', context)
+
+    def post(self, request):
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse_lazy('login'))
+        else:
+            context = {'form': form}
+            return render(request, 'OWDR/register.html', context)
 
 
 class FormView(View):
