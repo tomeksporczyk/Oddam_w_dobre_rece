@@ -59,6 +59,11 @@ class RegisterView(View):
             return render(request, 'OWDR/register.html', context)
 
 
+class UserProfileView(View):
+    def get(self, request):
+        return render(request, 'OWDR/user_profile.html', context={'user': request.user})
+
+
 class FormView(View):
     def get(self, request):
         return render(request, 'OWDR/form.html')

@@ -6,6 +6,7 @@ urlpatterns = [
     path('', LandingPageView.as_view(), name='landing_page'),
     path('login', LoginView.as_view(), name='login'),
     path('register', RegisterView.as_view(), name='register'),
+    path('profile', UserProfileView.as_view(), name='profile'),
     path('form', FormView.as_view(), name='form'),
     path('staff', StaffView.as_view(), name='staff'),
 ]
