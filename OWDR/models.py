@@ -80,8 +80,8 @@ class Institution(models.Model):
 
 
 class Target(models.Model):
-    name = models.CharField(max_length=64
-                            )
+    name = models.CharField(max_length=64)
+
 
 class Province(models.Model):
     name = models.CharField(max_length=50)

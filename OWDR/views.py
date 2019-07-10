@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login, update_session_auth_hash
+from django.contrib.auth import authenticate, login, update_session_auth_hash, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -59,18 +59,18 @@ class RegisterView(View):
             return render(request, 'OWDR/register.html', context)
 
 
-class UserProfileView(View):
+class UserProfileView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, 'OWDR/user_profile.html', context={'user': request.user})
 
 
-class EditProfileView(View):
+class EditProfileView(LoginRequiredMixin, View):
     def get(self, request):
         form = EditUserForm(instance=request.user).as_p()
         return render(request, 'OWDR/uni_form.html', context={'form': form, 'submit': 'Zapisz'})
 
     def post(self, request):
-        form =EditUserForm(request.POST, instance=request.user)
+        form = EditUserForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
             return redirect(reverse_lazy('profile'))
@@ -79,7 +79,7 @@ class EditProfileView(View):
             return render(request, 'OWDR/uni_form.html', context={'form': form, 'submit': 'Zapisz'})
 
 
-class ChangePasswordView(View):
+class ChangePasswordView(LoginRequiredMixin, View):
     def get(self, request):
         form = PasswordChangeForm(user=request.user)
         return render(request, 'OWDR/uni_form.html', context={'form': form, 'submit': 'Zapisz'})
@@ -94,6 +94,12 @@ class ChangePasswordView(View):
             message = "Hasło niepoprawne"
             form = PasswordChangeForm(user=request.user)
             return render(request, 'OWDR/uni_form.html', context={'form': form, 'submit': 'Zapisz', 'message': message})
+
+
+class LogoutView(LoginRequiredMixin, View):
+    def get(self, request):
+        logout(request)
+        return redirect(reverse_lazy('login'))
 
 
 class FormView(View):
