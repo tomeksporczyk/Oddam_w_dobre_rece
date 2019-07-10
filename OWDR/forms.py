@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 
 from OWDR.models import User
 
@@ -13,3 +13,11 @@ class RegistrationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('email', 'first_name', 'last_name')
+
+
+class EditUserForm(UserChangeForm):
+    password = None
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name')

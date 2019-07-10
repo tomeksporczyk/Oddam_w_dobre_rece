@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -62,6 +62,38 @@ class RegisterView(View):
 class UserProfileView(View):
     def get(self, request):
         return render(request, 'OWDR/user_profile.html', context={'user': request.user})
+
+
+class EditProfileView(View):
+    def get(self, request):
+        form = EditUserForm(instance=request.user).as_p()
+        return render(request, 'OWDR/uni_form.html', context={'form': form, 'submit': 'Zapisz'})
+
+    def post(self, request):
+        form =EditUserForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse_lazy('profile'))
+        else:
+            form = EditUserForm(instance=request.user).as_p()
+            return render(request, 'OWDR/uni_form.html', context={'form': form, 'submit': 'Zapisz'})
+
+
+class ChangePasswordView(View):
+    def get(self, request):
+        form = PasswordChangeForm(user=request.user)
+        return render(request, 'OWDR/uni_form.html', context={'form': form, 'submit': 'Zapisz'})
+
+    def post(self, request):
+        form = PasswordChangeForm(data=request.POST, user=request.user)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            return redirect(reverse_lazy('profile'))
+        else:
+            message = "Hasło niepoprawne"
+            form = PasswordChangeForm(user=request.user)
+            return render(request, 'OWDR/uni_form.html', context={'form': form, 'submit': 'Zapisz', 'message': message})
 
 
 class FormView(View):
