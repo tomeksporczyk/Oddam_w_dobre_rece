@@ -76,7 +76,12 @@ class Institution(models.Model):
     name = models.CharField(max_length=126)
     mission_description = models.TextField(max_length=1024)
     province = models.ForeignKey('Province', on_delete=models.DO_NOTHING)
+    target = models.ForeignKey('Target', on_delete=models.DO_NOTHING)
 
+
+class Target(models.Model):
+    name = models.CharField(max_length=64
+                            )
 
 class Province(models.Model):
     name = models.CharField(max_length=50)
