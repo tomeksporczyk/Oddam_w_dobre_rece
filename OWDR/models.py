@@ -49,7 +49,7 @@ class User(AbstractUser):
 
 
 class Gift(models.Model):
-    items = models.ManyToManyField("ItemType")
+    items = models.ManyToManyField("Item")
     quantity = models.IntegerField()
     institution = models.ForeignKey('Institution', on_delete=models.CASCADE)
     pick_up_address = models.ForeignKey('PickUpAddress', on_delete=models.CASCADE)
@@ -87,10 +87,16 @@ class Province(models.Model):
     name = models.CharField(max_length=50)
 
 
-class ItemType(models.Model):
+class Item(models.Model):
     name = models.CharField(max_length=128)
-    description = models.ManyToManyField('ItemDescription')
+    type = models.CharField(max_length=128, blank=True)
+    description = models.CharField(max_length=128, blank=True)
 
 
-class ItemDescription(models.Model):
-    description = models.CharField(max_length=256)
+# class ItemType(models.Model):
+#     name = models.CharField(max_length=128)
+#     description = models.ManyToManyField('ItemDescription')
+#
+#
+# class ItemDescription(models.Model):
+#     description = models.CharField(max_length=256)

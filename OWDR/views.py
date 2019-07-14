@@ -2,12 +2,14 @@ from django.contrib.auth import authenticate, login, update_session_auth_hash, l
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from rest_framework import generics, mixins, viewsets
 
 # Create your views here.
 from django.urls import reverse_lazy
 from django.views import View
 
 from OWDR.forms import *
+from OWDR.serializers import UserSerializer
 
 
 class LandingPageView(LoginRequiredMixin, View):
@@ -31,6 +33,7 @@ class LoginView(View):
             if user is not None:
                 login(request, user)
                 next_ = request.GET.get('next')
+                print(next_)
                 print(user.is_staff)
                 if next_ is not None:
                     if user.is_staff:
@@ -110,3 +113,14 @@ class FormView(View):
 class StaffView(View):
     def get(self, request):
         return HttpResponse('staff')
+
+
+class UserListView(mixins.ListModelMixin,
+                   mixins.DestroyModelMixin,
+                   mixins.UpdateModelMixin,
+                   mixins.RetrieveModelMixin,
+                   viewsets.GenericViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
