@@ -59,6 +59,12 @@ class Gift(models.Model):
     picked_up_date = models.DateField()
 
 
+class Item(models.Model):
+    name = models.CharField(max_length=128)
+    type = models.CharField(max_length=128, blank=True)
+    description = models.CharField(max_length=128, blank=True)
+
+
 class PickUpAddress(models.Model):
     street = models.CharField(max_length=256)
     city = models.CharField(max_length=64)
@@ -86,11 +92,6 @@ class Target(models.Model):
 class Province(models.Model):
     name = models.CharField(max_length=50)
 
-
-class Item(models.Model):
-    name = models.CharField(max_length=128)
-    type = models.CharField(max_length=128, blank=True)
-    description = models.CharField(max_length=128, blank=True)
 
 
 # class ItemType(models.Model):

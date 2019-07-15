@@ -14,6 +14,8 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from django.conf.global_settings import STATICFILES_DIRS
+from rest_framework import permissions
+
 from Oddam_w_dobre_rece.db_settings import POSTGRES_USER, POSTGRES_PASSWORD
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -41,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'OWDR.apps.OwdrConfig',
+    'staff.apps.StaffConfig',
     'rest_framework'
 ]
 
@@ -129,3 +132,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'OWDR.User'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAdminUser',
+
+    )
+}

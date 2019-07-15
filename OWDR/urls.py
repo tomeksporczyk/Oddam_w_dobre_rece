@@ -3,11 +3,6 @@ from django.urls import path, include
 
 from OWDR.views import *
 
-router = routers.DefaultRouter()
-# router.register('user_list', UserListView)
-router.register('users', UserListView)
-
-
 urlpatterns = [
     path('', LandingPageView.as_view(), name='landing_page'),
     path('login', LoginView.as_view(), name='login'),
@@ -17,5 +12,4 @@ urlpatterns = [
     path('profile/edit', EditProfileView.as_view(), name='profile_edit'),
     path('profile/change-password', ChangePasswordView.as_view(), name='change_password'),
     path('form', FormView.as_view(), name='form'),
-    path('staff/', include(router.urls)),
 ]
