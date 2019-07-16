@@ -2,14 +2,11 @@ from django.contrib.auth import authenticate, login, update_session_auth_hash, l
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-
-
-# Create your views here.
 from django.urls import reverse_lazy
 from django.views import View
 
 from OWDR.forms import *
-from staff.serializers import UserSerializer
+from OWDR.models import *
 
 
 class LandingPageView(LoginRequiredMixin, View):
@@ -108,11 +105,22 @@ class LogoutView(LoginRequiredMixin, View):
 
 class FormView(View):
     def get(self, request):
-        return render(request, 'OWDR/form.html')
+        items = Item.objects.filter(pk__lte=33)
+        provinces = Province.objects.all()
+        targets = Target.objects.all()
+        institutions = Institution.objects.all()
+        context = {'items': items, 'provinces': provinces, 'targets': targets, 'institutions': institutions}
+        return render(request, 'OWDR/form.html', context)
 
+    # def
 
-class StaffView(View):
-    def get(self, request):
-        return HttpResponse('staff')
-
-
+    def post(self, request):
+        items = request.POST.getlist('item')
+        quantity = request.POST.get('quantity')
+        institution = request.POST.get('institution')
+        street = request.POST.get('street')
+        city = request.POST.get('city')
+        postal_code = request.POST.get('postal_code')
+        phone_number = request.POST.get('phone_number')
+        print(items, quantity, institution, street, city, postal_code, phone_number)
+        return HttpResponse('qpa')
