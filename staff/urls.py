@@ -7,6 +7,9 @@ router = routers.DefaultRouter()
 router.register('users', UserSerializerView, basename='users')
 router.register('admins', AdminSerializerView, basename='admins')
 router.register('institutions', InstitutionSerializerView)
+router.register('targets', TargetSerializerView)
+router.register('items', ItemSerializerView)
+router.register('provinces', ProvinceSerializerView)
 
 
 urlpatterns = [

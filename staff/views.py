@@ -26,6 +26,16 @@ class InstitutionSerializerView(viewsets.ModelViewSet):
     serializer_class = InstitutionSerializer
 
 
+class ProvinceSerializerView(viewsets.ModelViewSet):
+    queryset = Province.objects.all()
+    serializer_class = ProvinceSerializer
 
-class ASerializer():
-    pass
+
+class TargetSerializerView(viewsets.ModelViewSet):
+    queryset = Target.objects.all()
+    serializer_class = TargetSerializer
+
+
+class ItemSerializerView(viewsets.ModelViewSet):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer

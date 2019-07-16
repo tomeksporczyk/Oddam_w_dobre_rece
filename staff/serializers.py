@@ -13,4 +13,25 @@ class InstitutionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Institution
-        fields = ('name', 'mission_description', 'province')
+        fields = '__all__'
+
+
+class ProvinceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Province
+        fields = ('id', 'name',)
+
+
+class TargetSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Target
+        fields = ('url', 'name',)
+
+
+class ItemSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Item
+        fields = '__all__'
