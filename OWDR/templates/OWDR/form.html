@@ -92,7 +92,7 @@
 
       <div class="form--steps-container">
         <div class="form--steps-counter">Krok <span>1</span>/5</div>
-
+        <h4>{{ error_message|safe }}</h4>
         <form method="post" action="/">
         {% csrf_token %}
           <!-- STEP 1: class .active is switching steps -->
@@ -310,7 +310,7 @@
 
                 <div class="form-group form-group--buttons">
                   <button type="button" class="btn prev-step">Wstecz</button>
-                  <button type="submit" class="btn">Potwierdzam</button>
+                  <button type="submit" class="btn" >Potwierdzam</button>
                 </div>
               </div>
 
@@ -362,5 +362,6 @@
         </footer>
 
         <script src="{% static 'js/app.js' %}"></script>
+        <script src="{% static 'js/text_field.js' %}"></script>
   </body>
 </html>

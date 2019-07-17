@@ -246,22 +246,16 @@ document.addEventListener("DOMContentLoaded", function() {
       e.preventDefault();
       this.currentStep++;
       this.updateForm();
+
+      e.target.submit();
+
     }
   }
   const form = document.querySelector(".form--steps");
   if (form !== null) {
     new FormSteps(form);
   }
-  
-  var otherCheckbox = document.querySelector('#other');
-  var hidden = document.querySelector("#hidden-fields");
-  otherCheckbox.addEventListener("onclick", function(){
-    if (hidden.getAttribute("style") === "display: none"){
-      hidden.setAttribute("style", "display: block")
-      }
-    else{
-      hidden.setAttribute("style", "display: none")
-    }
-  })
+
+
 });
 

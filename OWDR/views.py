@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
-
+import datetime
 from OWDR.forms import *
 from OWDR.models import *
 
@@ -15,6 +15,8 @@ class LandingPageView(LoginRequiredMixin, View):
 
     def get(self, request):
         return render(request, 'OWDR/index.html')
+
+
 
 
 class LoginView(View):
@@ -104,23 +106,46 @@ class LogoutView(LoginRequiredMixin, View):
 
 
 class FormView(View):
-    def get(self, request):
+    def get(self, request, error_message=''):
         items = Item.objects.filter(pk__lte=33)
         provinces = Province.objects.all()
         targets = Target.objects.all()
         institutions = Institution.objects.all()
-        context = {'items': items, 'provinces': provinces, 'targets': targets, 'institutions': institutions}
+        context = {'items': items, 'provinces': provinces, 'targets': targets, 'institutions': institutions, 'error_message': error_message}
         return render(request, 'OWDR/form.html', context)
-
-    # def
 
     def post(self, request):
         items = request.POST.getlist('item')
+        other_item = request.POST.get('others_text_field')
         quantity = request.POST.get('quantity')
         institution = request.POST.get('institution')
         street = request.POST.get('street')
         city = request.POST.get('city')
         postal_code = request.POST.get('postal_code')
         phone_number = request.POST.get('phone_number')
+        date_ = request.POST.get('date')
+        time_ = request.POST.get('time')
+        message = request.POST.get('message')
         print(items, quantity, institution, street, city, postal_code, phone_number)
-        return HttpResponse('qpa')
+        if len(items) > 0 and\
+                None not in (quantity, institution, street, city, postal_code, phone_number, date_, time_, message):
+            if 'other' in items and other_item is not None:
+                Item.objects.create(name=other_item)
+                items.append(Item.objects.last().pk)
+            else:
+                return self.get(request, error_message="Coś poszło nie tak, uzupełnij formularz jeszcze raz")
+            try:
+                quantity = int(quantity)
+                date_list = date_.split('-')
+                date_ = datetime.date(int(date_list[0]), int(date_list[1]), int(date_list[2]))
+                time_list = time_.split(':')
+                time_ = datetime.time(int(time_list[0]), int(time_list[1]))
+            except ValueError:
+                return self.get(request, error_message="Coś poszło nie tak, uzupełnij formularz jeszcze raz")
+            PickUpAddress.objects.create(street=street, city=city, postal_code=postal_code, phone_number=phone_number)
+            CourierInformation.objects.create(date=date_, time=time_, message=message)
+
+        else:
+            return self.get(request, error_message="Coś poszło nie tak, uzupełnij formularz jeszcze raz")
+
+
