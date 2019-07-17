@@ -17,8 +17,6 @@ class LandingPageView(LoginRequiredMixin, View):
         return render(request, 'OWDR/index.html')
 
 
-
-
 class LoginView(View):
     def get(self, request):
         return render(request, 'OWDR/login.html', context={'form': LoginForm().as_p()})
@@ -126,26 +124,42 @@ class FormView(View):
         date_ = request.POST.get('date')
         time_ = request.POST.get('time')
         message = request.POST.get('message')
-        print(items, quantity, institution, street, city, postal_code, phone_number)
-        if len(items) > 0 and\
-                None not in (quantity, institution, street, city, postal_code, phone_number, date_, time_, message):
-            if 'other' in items and other_item is not None:
-                Item.objects.create(name=other_item)
-                items.append(Item.objects.last().pk)
-            else:
-                return self.get(request, error_message="Coś poszło nie tak, uzupełnij formularz jeszcze raz")
+        print(message is None)
+        print(items, quantity, institution, street, city, postal_code, phone_number, 'date: ', date_, time_,message)
+        if (len(items) > 0 or other_item)\
+                and None not in (quantity, institution, street, city, postal_code, phone_number, date_, time_, message):
+            if other_item:
+                other_item = Item.objects.create(name=other_item)
+                items.append(other_item.pk)
+            for i in range(len(items)):
+                try:
+                    items[i] = int(items[i])
+                except ValueError:
+                    return self.get(request, error_message="Coś poszło nie tak, uzupełnij formularz jeszcze raz")
             try:
                 quantity = int(quantity)
+                institution = int(institution)
                 date_list = date_.split('-')
                 date_ = datetime.date(int(date_list[0]), int(date_list[1]), int(date_list[2]))
                 time_list = time_.split(':')
                 time_ = datetime.time(int(time_list[0]), int(time_list[1]))
             except ValueError:
                 return self.get(request, error_message="Coś poszło nie tak, uzupełnij formularz jeszcze raz")
-            PickUpAddress.objects.create(street=street, city=city, postal_code=postal_code, phone_number=phone_number)
-            CourierInformation.objects.create(date=date_, time=time_, message=message)
+            pick_up_address = PickUpAddress.objects.create(street=street,
+                                                           city=city,
+                                                           postal_code=postal_code,
+                                                           phone_number=phone_number)
+            courier_information = CourierInformation.objects.create(date=date_,
+                                                                    time=time_,
+                                                                    message=message)
+            gift = Gift.objects.create(quantity=quantity,
+                                       institution_id=institution,
+                                       pick_up_address_id=pick_up_address.pk,
+                                       courier_information_id=courier_information.pk,
+                                       created_by=request.user)
 
+            gift.items.add(*items)
         else:
             return self.get(request, error_message="Coś poszło nie tak, uzupełnij formularz jeszcze raz")
-
+        return render(request, 'OWDR/thanks.html')
 

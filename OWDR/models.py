@@ -56,7 +56,8 @@ class Gift(models.Model):
     courier_information = models.ForeignKey('CourierInformation', on_delete=models.CASCADE)
     created_date = models.DateField(auto_now_add=True)
     picked_up = models.BooleanField(default=False)
-    picked_up_date = models.DateField()
+    picked_up_date = models.DateField(blank=True, null=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class Item(models.Model):

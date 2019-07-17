@@ -92,8 +92,11 @@
 
       <div class="form--steps-container">
         <div class="form--steps-counter">Krok <span>1</span>/5</div>
-        <h4>{{ error_message|safe }}</h4>
-        <form method="post" action="/">
+      {% if error_message is not None %}
+        <h2 style="color: red">{{ error_message|safe }}</h2><br>
+      {% else %}
+      {% endif %}
+        <form method="post">
         {% csrf_token %}
           <!-- STEP 1: class .active is switching steps -->
           <div data-step="1" class="active">
@@ -115,7 +118,7 @@
                 {% endfor %}
                 <div class="form-group form-group--checkbox">
                   <label>
-                    <input type="checkbox" name="item" value="other" />
+                    <input type="checkbox" value="other"/>
                     <span class="checkbox" id="other"></span>
                     <span class="description">inne</span>
                   </label>
@@ -241,7 +244,7 @@
                   <div class="form-section--column">
                     <h4>Termin odbioru</h4>
                     <div class="form-group form-group--inline">
-                      <label> Data <input type="date" name="data" /> </label>
+                      <label> Data <input type="date" name="date" /> </label>
                     </div>
 
                     <div class="form-group form-group--inline">
