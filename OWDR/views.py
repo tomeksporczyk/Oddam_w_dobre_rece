@@ -113,6 +113,7 @@ class FormView(View):
         return render(request, 'OWDR/form.html', context)
 
     def post(self, request):
+        '''todo: check if model records exist'''
         items = request.POST.getlist('item')
         other_item = request.POST.get('others_text_field')
         quantity = request.POST.get('quantity')
