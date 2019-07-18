@@ -155,11 +155,11 @@
               <div data-step="3">
                 <h3>Lokalizacja:</h3>
 
-                <div class="form-group form-group--dropdown">
-                  <select name="province">
+                <div class="form-group">
+                  <select name="province" id="search_province" >
                     <option value="">- wybierz -</option>
                     {% for province in provinces %}
-                        <option value="{{ province.id }}">{{ province.name }}</option>
+                        <option value="{{ province.name }}">{{ province.name }}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -169,7 +169,7 @@
                     <div class="form-section--checkboxes">
                         {% for target in targets %}
                             <div class="form-group form-group--checkbox">
-                                <label><input type="radio" name="target" value="{{ target.id }}"/>{{ target.name }}
+                                <label><input type="radio" name="target" value="{{ target.name }}"/>{{ target.name }}
                                 <span class="checkbox radio"></span>
                                 </label>
                             </div>
@@ -196,6 +196,8 @@
                     {% for institution in institutions %}
                         <div class="form-group form-group--checkbox">
                           <label>
+                            <span id="institutions_province" style="display: none">{{ institution.province }}</span>
+                            <span id="institutions_target" style="display: none">{{ institution.target }}</span>
                             <input type="radio" name="institution" value="{{ institution.id }}" />
                             <span class="checkbox radio"></span>
                             <span class="description">
