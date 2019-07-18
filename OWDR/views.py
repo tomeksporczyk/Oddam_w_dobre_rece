@@ -113,7 +113,6 @@ class FormView(View):
         return render(request, 'OWDR/form.html', context)
 
     def post(self, request):
-        '''todo: check if model records exist'''
         items = request.POST.getlist('item')
         other_item = request.POST.get('others_text_field')
         quantity = request.POST.get('quantity')
@@ -129,14 +128,6 @@ class FormView(View):
         print(items, quantity, institution, street, city, postal_code, phone_number, 'date: ', date_, time_,message)
         if (len(items) > 0 or other_item)\
                 and None not in (quantity, institution, street, city, postal_code, phone_number, date_, time_, message):
-            if other_item:
-                other_item = Item.objects.create(name=other_item)
-                items.append(other_item.pk)
-            for i in range(len(items)):
-                try:
-                    items[i] = int(items[i])
-                except ValueError:
-                    return self.get(request, error_message="Coś poszło nie tak, uzupełnij formularz jeszcze raz")
             try:
                 quantity = int(quantity)
                 institution = int(institution)
@@ -146,13 +137,34 @@ class FormView(View):
                 time_ = datetime.time(int(time_list[0]), int(time_list[1]))
             except ValueError:
                 return self.get(request, error_message="Coś poszło nie tak, uzupełnij formularz jeszcze raz")
-            pick_up_address = PickUpAddress.objects.create(street=street,
+            if other_item:
+                catalogued_item = Item.objects.filter(name=other_item).first()
+                if not catalogued_item:
+                    other_item = Item.objects.create(name=other_item)
+                    items.append(other_item.pk)
+                else:
+                    items.append(catalogued_item.pk)
+            for i in range(len(items)):
+                try:
+                    items[i] = int(items[i])
+                except ValueError:
+                    return self.get(request, error_message="Coś poszło nie tak, uzupełnij formularz jeszcze raz")
+            pick_up_address = PickUpAddress.objects.filter(street=street,
                                                            city=city,
                                                            postal_code=postal_code,
-                                                           phone_number=phone_number)
-            courier_information = CourierInformation.objects.create(date=date_,
+                                                           phone_number=phone_number).first()
+            if not pick_up_address:
+                pick_up_address = PickUpAddress.objects.create(street=street,
+                                                               city=city,
+                                                               postal_code=postal_code,
+                                                               phone_number=phone_number)
+            courier_information = CourierInformation.objects.filter(date=date_,
                                                                     time=time_,
-                                                                    message=message)
+                                                                    message=message).first()
+            if not courier_information:
+                courier_information = CourierInformation.objects.create(date=date_,
+                                                                        time=time_,
+                                                                        message=message)
             gift = Gift.objects.create(quantity=quantity,
                                        institution_id=institution,
                                        pick_up_address_id=pick_up_address.pk,
