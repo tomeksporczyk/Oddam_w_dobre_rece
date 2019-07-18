@@ -15,6 +15,7 @@ $(document).ready(function() {
         // Get the form fields and hidden div
         var checkbox = $("#other");
         var hidden = $("#hidden-fields");
+        var text = "";
         // var populate = $("#populate");
 
         // Hide the fields.
@@ -29,14 +30,14 @@ $(document).ready(function() {
             // If it is, show the fields and populate the input.
             // If not, hide the fields.
             if (checkbox.is(':checked')) {
+                $("#hidden-field").val(text);
                 // Show the hidden fields.
                 hidden.show();
-                // Populate the input.
-                // populate.val("Dude, this input got populated!");
             } else {
-                // Make sure that the hidden fields are indeed
-                // hidden.
+                // hide fields
                 hidden.hide();
+                text = $("#hidden-field").val();
+                // if text field is hidden its value is ""
                 $("#hidden-field").val("");
             }
         });
