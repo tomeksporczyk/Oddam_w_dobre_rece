@@ -11,6 +11,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class InstitutionSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="staff:institution-detail")
 
     class Meta:
         model = Institution

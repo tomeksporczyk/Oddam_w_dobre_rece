@@ -14,6 +14,7 @@ router.register('provinces', ProvinceSerializerView)
 
 
 urlpatterns = [
+    path('staff', include(router.urls)),
     url(r'^staff/', include((router.urls, 'staff'), namespace='staff')),
     path('api-auth', include('rest_framework.urls'))
 ]
