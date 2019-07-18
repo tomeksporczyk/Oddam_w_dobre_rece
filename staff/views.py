@@ -17,7 +17,7 @@ class AdminSerializerView(mixins.ListModelMixin,
                           mixins.UpdateModelMixin,
                           mixins.RetrieveModelMixin,
                           viewsets.GenericViewSet):
-    queryset = User.objects.filter(is_staff=True)
+    queryset = User.objects.filter(is_staff=True, is_superuser=False)
     serializer_class = UserSerializer
 
 

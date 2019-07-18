@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
   </head>
   <body>
     <header class="header--form-page">
@@ -118,13 +119,13 @@
                 {% endfor %}
                 <div class="form-group form-group--checkbox">
                   <label>
-                    <input type="checkbox" value="other"/>
-                    <span class="checkbox" id="other"></span>
+                    <input type="checkbox" value="other" id="other"/>
+                    <span class="checkbox" ></span>
                     <span class="description">inne</span>
                   </label>
                 </div>
                 <div id="hidden-fields" class="form-group" style="display: block">
-                    <input type="text" id="hidden-field" name="others_text_field">
+                    <input type="text" id="hidden-field" name="others_text_field" value="">
 
                 </div>
 
@@ -365,6 +366,6 @@
         </footer>
 
         <script src="{% static 'js/app.js' %}"></script>
-        <script src="{% static 'js/text_field.js' %}"></script>
+        <script src="{% static 'js/form.js' %}"></script>
   </body>
 </html>
