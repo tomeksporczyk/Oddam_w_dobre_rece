@@ -105,11 +105,7 @@
                 {% for item in items %}
                     <div class="form-group form-group--checkbox">
                       <label>
-                        <input
-                          type="checkbox"
-                          name="item"
-                          value="{{ item.id }}"
-                        />
+                        <input type="checkbox" name="item" value="{{ item.id }}"/>
                         <span class="checkbox"></span>
                         <span class="description"
                           >{{ item.name }} {{ item.type }} {{ item.description }}</span
@@ -119,16 +115,14 @@
                 {% endfor %}
                 <div class="form-group form-group--checkbox">
                   <label>
-                    <input type="checkbox" value="other" id="other"/>
+                    <input type="checkbox" name="other" value="" id="other"/>
                     <span class="checkbox" ></span>
                     <span class="description">inne</span>
                   </label>
                 </div>
                 <div id="hidden-fields" class="form-group" style="display: block">
                     <input type="text" id="hidden-field" name="others_text_field" value="">
-
                 </div>
-
                 <div class="form-group form-group--buttons">
                   <button type="button" class="btn next-step">Dalej</button>
                 </div>
@@ -168,9 +162,9 @@
                   <h4>Komu chcesz pomóc?</h4>
                     <div class="form-section--checkboxes">
                         {% for target in targets %}
-                            <div class="form-group form-group--checkbox">
-                                <label><input type="radio" name="target" value="{{ target.name }}"/>{{ target.name }}
-                                <span class="checkbox radio"></span>
+                            <div class="form-group">
+                                <label><input type="radio" id="target" name="target" value="{{ target.name }}"/>{{ target.name }}
+
                                 </label>
                             </div>
                          {% endfor %}
@@ -180,7 +174,7 @@
                 <div class="form-section">
                   <h4>Wpisz nazwę konkretnej organizacji (opcjonalnie)</h4>
                   <div class="form-group">
-                    <textarea rows="4" name="organization_search"></textarea>
+                    <textarea rows="4" name="organization_search" id="search_name"></textarea>
                   </div>
                 </div>
 
@@ -200,8 +194,8 @@
                             <span id="institutions_target" style="display: none">{{ institution.target }}</span>
                             <input type="radio" name="institution" value="{{ institution.id }}" />
                             <span class="checkbox radio"></span>
-                            <span class="description">
-                              <div class="title">{{ institution.name }}</div>
+                            <span class="description" id="dupa">
+                              <div class="title" id="institution_name">{{ institution.name }}</div>
                               <div class="subtitle">
                                 Cel i misja: {{ institution.mission_description }}
                               </div>
@@ -264,7 +258,7 @@
                 </div>
                 <div class="form-group form-group--buttons">
                   <button type="button" class="btn prev-step">Wstecz</button>
-                  <button type="button" class="btn next-step">Dalej</button>
+                  <button type="button" class="btn next-step" id="last-button">Dalej</button>
                 </div>
               </div>
 
@@ -276,18 +270,12 @@
                   <div class="form-section">
                     <h4>Oddajesz:</h4>
                     <ul>
-                      <li>
+                      <li id="quantity-items-summary">
                         <span class="icon icon-bag"></span>
-                        <span class="summary--text"
-                          >4 worki ubrań w dobrym stanie dla dzieci</span
-                        >
                       </li>
 
-                      <li>
+                      <li id="institution-summary">
                         <span class="icon icon-hand"></span>
-                        <span class="summary--text"
-                          >Dla fundacji "Mam marzenie" w Warszawie</span
-                        >
                       </li>
                     </ul>
                   </div>
@@ -295,20 +283,13 @@
                   <div class="form-section form-section--columns">
                     <div class="form-section--column">
                       <h4>Adres odbioru:</h4>
-                      <ul>
-                        <li>Prosta 51</li>
-                        <li>Warszawa</li>
-                        <li>99-098</li>
-                        <li>123 456 789</li>
+                      <ul id="address-summary">
                       </ul>
                     </div>
 
                     <div class="form-section--column">
                       <h4>Termin odbioru:</h4>
-                      <ul>
-                        <li>13/12/2018</li>
-                        <li>15:40</li>
-                        <li>Brak uwag</li>
+                      <ul id="courier-info-summary">
                       </ul>
                     </div>
                   </div>
