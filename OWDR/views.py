@@ -116,6 +116,7 @@ class LogoutView(LoginRequiredMixin, View):
 
 
 class FormView(LoginRequiredMixin, View):
+    '''todo: check if date and time is not in the past'''
     login_url = 'login'
     redirect_field_name = 'next'
 
@@ -191,3 +192,21 @@ class FormView(LoginRequiredMixin, View):
             return self.get(request, error_message="Coś poszło nie tak, uzupełnij formularz jeszcze raz")
         return render(request, 'OWDR/thanks.html')
 
+
+class MyDonationsView(LoginRequiredMixin, View):
+    login_url = 'login'
+    redirect_field_name = 'next'
+
+    def get(self, request):
+        my_active_donations = Gift.objects.filter(picked_up=False, created_by=request.user).order_by("created_date")
+        my_past_donations = Gift.objects.filter(picked_up=True, created_by=request.user).order_by("-picked_up_date")
+        context = {'active': my_active_donations, 'past': my_past_donations}
+        return render(request, 'OWDR/my_donations.html', context)
+
+
+class DonationDetailsView(LoginRequiredMixin, View):
+    login_url = 'login'
+    redirect_field_name = 'next'
+
+    def get(self, request):
+        pass

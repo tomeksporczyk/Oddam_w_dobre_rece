@@ -1,0 +1,54 @@
+{% extends 'OWDR/base.html' %}
+{% block content %}
+    <h2>Donacje aktywne</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Data utworzenia zbiórki</th>
+                <th>Przedmioty</th>
+                <th>Ilość worków</th>
+                <th>Dla</th>
+                <th>Ustalona data przekazania</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in active %}
+                <tr>
+                    <td>{{ record.created_date }}</td>
+                    <td>{% for item in record.items.all %}
+                            {{ item.name }}<br>
+                        {% endfor %}</td>
+                    <td>{{ record.quantity }}</td>
+                    <td>{{ record.institution.name }}</td>
+                    <td>dnia {{ record.courier_information.date }}<br>o godzinie {{ record.courier_information.time }}</td>
+                    <td><a href="{% url 'donation_detais' %}">Zmień/zatwierdź odebranie</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2>Przeszłe donacje</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Data utworzenia zbiórki</th>
+                <th>Przedmioty</th>
+                <th>Ilość worków</th>
+                <th>Dla</th>
+                <th>Data przekazania</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in past %}
+                <tr>
+                    <td>{{ record.created_date }}</td>
+                    <td>{% for item in record.items.all %}
+                            {{ item.name }}<br>
+                        {% endfor %}</td>
+                    <td>{{ record.quantity }}</td>
+                    <td>{{ record.institution.name }}</td>
+                    <td>dnia {{ record.picked_up_date }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
