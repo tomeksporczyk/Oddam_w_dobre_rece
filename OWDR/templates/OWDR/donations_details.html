@@ -1,6 +1,11 @@
 {% extends 'OWDR/base.html' %}
 {% block content %}
-    <h2>Paczka:</h2>
+    {% if donation.picked_up %}
+        <h2 style="color: green;">Paczka odebrana</h2>
+    {% else %}
+        <h2 style="color: red;">Paczka czeka na odebranie</h2>
+    {% endif %}
+    <h3>Paczka:</h3>
     <table>
         <thead>
             <tr>
@@ -10,12 +15,12 @@
         </thead>
         <tbody>
             <tr>
-                <td>{% for item in donation.items.all %}{{ item.name }}{% endfor %}</td>
+                <td>{% for item in donation.items.all %}{{ item.name }}<br>{% endfor %}</td>
                 <td>{{ donation.quantity }}</td>
             </tr>
         </tbody>
     </table>
-    <h2>Adres przekazania przesyłki</h2>
+    <h3>Adres przekazania przesyłki</h3>
     <table>
         <thead>
             <tr>
@@ -34,7 +39,7 @@
             </tr>
         </tbody>
     </table>
-    <h2>Informacje dla kuriera</h2>
+    <h3>Informacje dla kuriera</h3>
     <table>
         <thead>
             <tr>
@@ -51,7 +56,7 @@
             </tr>
         </tbody>
     </table>
-    <h2>Instytucja:</h2>
+    <h3>Instytucja:</h3>
     <table>
         <thead>
             <tr>
