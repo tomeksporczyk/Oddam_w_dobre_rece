@@ -61,11 +61,17 @@ class RegisterView(View):
 
 
 class UserProfileView(LoginRequiredMixin, View):
+    login_url = 'login'
+    redirect_field_name = 'next'
+
     def get(self, request):
         return render(request, 'OWDR/user_profile.html', context={'user': request.user})
 
 
 class EditProfileView(LoginRequiredMixin, View):
+    login_url = 'login'
+    redirect_field_name = 'next'
+
     def get(self, request):
         form = EditUserForm(instance=request.user).as_p()
         return render(request, 'OWDR/uni_form.html', context={'form': form, 'submit': 'Zapisz'})
@@ -81,6 +87,9 @@ class EditProfileView(LoginRequiredMixin, View):
 
 
 class ChangePasswordView(LoginRequiredMixin, View):
+    login_url = 'login'
+    redirect_field_name = 'next'
+
     def get(self, request):
         form = PasswordChangeForm(user=request.user)
         return render(request, 'OWDR/uni_form.html', context={'form': form, 'submit': 'Zapisz'})
@@ -98,12 +107,18 @@ class ChangePasswordView(LoginRequiredMixin, View):
 
 
 class LogoutView(LoginRequiredMixin, View):
+    login_url = 'login'
+    redirect_field_name = 'next'
+
     def get(self, request):
         logout(request)
         return redirect(reverse_lazy('login'))
 
 
-class FormView(View):
+class FormView(LoginRequiredMixin, View):
+    login_url = 'login'
+    redirect_field_name = 'next'
+
     def get(self, request, error_message=''):
         items = Item.objects.filter(pk__lte=33)
         provinces = Province.objects.all()
