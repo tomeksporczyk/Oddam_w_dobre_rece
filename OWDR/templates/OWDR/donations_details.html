@@ -1,0 +1,70 @@
+{% extends 'OWDR/base.html' %}
+{% block content %}
+    <h2>Paczka:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Przedmioty</th>
+                <th>Liczba</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{% for item in donation.items.all %}{{ item.name }}{% endfor %}</td>
+                <td>{{ donation.quantity }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>Adres przekazania przesyłki</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Ulica</th>
+                <th>Miejsowość</th>
+                <th>Kod pocztowy</th>
+                <th>Nr telefonu</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ donation.pick_up_address.street }}</td>
+                <td>{{ donation.pick_up_address.city }}</td>
+                <td>{{ donation.pick_up_address.postal_code }}</td>
+                <td>{{ donation.pick_up_address.phone_number }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>Informacje dla kuriera</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Data odbioru</th>
+                <th>Godzina odbioru</th>
+                <th>Wiadomość dla kuriera</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ donation.courier_information.date}}</td>
+                <td>{{ donation.courier_information.time}}</td>
+                <td>{{ donation.courier_information.message}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>Instytucja:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nazwa</th>
+                <th>Opis misyjny</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ donation.institution.name }}</td>
+                <td>{{ donation.institution.mission_description }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock %}

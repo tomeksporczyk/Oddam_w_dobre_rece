@@ -208,5 +208,6 @@ class DonationDetailsView(LoginRequiredMixin, View):
     login_url = 'login'
     redirect_field_name = 'next'
 
-    def get(self, request):
-        pass
+    def get(self, request, pk):
+        donation = Gift.objects.get(pk=pk)
+        return render(request, 'OWDR/donations_details.html', context={'donation': donation})

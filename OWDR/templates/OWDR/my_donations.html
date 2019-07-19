@@ -21,7 +21,7 @@
                     <td>{{ record.quantity }}</td>
                     <td>{{ record.institution.name }}</td>
                     <td>dnia {{ record.courier_information.date }}<br>o godzinie {{ record.courier_information.time }}</td>
-                    <td><a href="{% url 'donation_detais' %}">Zmień/zatwierdź odebranie</a></td>
+                    <td><a href="{{ record.pk }}">Szczegóły</a></td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -47,6 +47,7 @@
                     <td>{{ record.quantity }}</td>
                     <td>{{ record.institution.name }}</td>
                     <td>dnia {{ record.picked_up_date }}</td>
+                    <td><a href="{{ record.pk }}">Szczegóły</a></td>
                 </tr>
             {% endfor %}
         </tbody>
