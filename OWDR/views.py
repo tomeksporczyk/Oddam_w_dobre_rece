@@ -1,12 +1,18 @@
 from django.contrib.auth import authenticate, login, update_session_auth_hash, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMessage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import View
 import datetime
 from OWDR.forms import *
 from OWDR.models import *
+from OWDR.tokens import account_activation_token
 
 
 class LandingPageView(LoginRequiredMixin, View):
@@ -18,8 +24,8 @@ class LandingPageView(LoginRequiredMixin, View):
 
 
 class LoginView(View):
-    def get(self, request):
-        return render(request, 'OWDR/login.html', context={'form': LoginForm().as_p()})
+    def get(self, request, message=''):
+        return render(request, 'OWDR/login.html', context={'form': LoginForm().as_p(), 'message': message})
 
     def post(self, request):
         form = LoginForm(request.POST)
@@ -53,11 +59,39 @@ class RegisterView(View):
     def post(self, request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            current_site = get_current_site(request)
+            mail_subject = "Aktywacja konta OWDR"
+            message = render_to_string('OWDR/acc_active_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user)
+            })
+            to_email = form.cleaned_data.get('email')
+            email = EmailMessage(mail_subject, message, to=[to_email])
+            email.send()
             return redirect(reverse_lazy('login'))
         else:
             context = {'form': form}
             return render(request, 'OWDR/register.html', context)
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        return render(request, 'OWDR/activation.html')
+    else:
+        return HttpResponse('Activation link is invalid!')
 
 
 class UserProfileView(LoginRequiredMixin, View):
@@ -140,8 +174,6 @@ class FormView(LoginRequiredMixin, View):
         date_ = request.POST.get('date')
         time_ = request.POST.get('time')
         message = request.POST.get('message')
-        print(message is None)
-        print(items, quantity, institution, street, city, postal_code, phone_number, 'date: ', date_, time_,message)
         if (len(items) > 0 or other_item)\
                 and None not in (quantity, institution, street, city, postal_code, phone_number, date_, time_, message):
             try:

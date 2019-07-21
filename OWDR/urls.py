@@ -1,7 +1,10 @@
-from rest_framework import routers
-from django.urls import path, include
 
-from OWDR.views import *
+from django.conf.urls import url
+
+from rest_framework import routers
+from django.urls import path
+
+from OWDR.views import LandingPageView, LoginView, LogoutView, RegisterView, UserProfileView, EditProfileView, ChangePasswordView, FormView, MyDonationsView, DonationDetailsView, activate
 
 urlpatterns = [
     path('', LandingPageView.as_view(), name='landing_page'),
@@ -14,4 +17,6 @@ urlpatterns = [
     path('form', FormView.as_view(), name='form'),
     path('donations/', MyDonationsView.as_view(), name='donation_list'),
     path('donations/<int:pk>', DonationDetailsView.as_view(), name='donation_details'),
+    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        activate, name='activate'),
 ]
