@@ -4,7 +4,9 @@ from django.conf.urls import url
 from rest_framework import routers
 from django.urls import path
 
-from OWDR.views import LandingPageView, LoginView, LogoutView, RegisterView, UserProfileView, EditProfileView, ChangePasswordView, FormView, MyDonationsView, DonationDetailsView, activate
+from OWDR.views import LandingPageView, LoginView, LogoutView, RegisterView, UserProfileView, EditProfileView, \
+    ChangePasswordView, FormView, MyDonationsView, DonationDetailsView, activate, ResetPasswordView, \
+    ResetPasswordConfirmView
 
 urlpatterns = [
     path('', LandingPageView.as_view(), name='landing_page'),
@@ -19,4 +21,7 @@ urlpatterns = [
     path('donations/<int:pk>', DonationDetailsView.as_view(), name='donation_details'),
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         activate, name='activate'),
+    path('reset_password', ResetPasswordView.as_view(), name='reset_password'),
+    url(r'^reset_password/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        ResetPasswordConfirmView.as_view(), name='reset_password_confirm'),
 ]

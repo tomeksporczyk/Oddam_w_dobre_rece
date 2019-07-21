@@ -21,3 +21,12 @@ class EditUserForm(UserChangeForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name')
+
+
+class ResetPasswordForm(forms.Form):
+    email = forms.EmailField()
+
+
+class ResetPasswordConfirmForm(forms.Form):
+    password = forms.CharField(max_length=129)
+    password_confirm = forms.PasswordInput()
