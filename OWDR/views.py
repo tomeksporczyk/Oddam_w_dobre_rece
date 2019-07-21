@@ -203,6 +203,16 @@ class MyDonationsView(LoginRequiredMixin, View):
         context = {'active': my_active_donations, 'past': my_past_donations}
         return render(request, 'OWDR/my_donations.html', context)
 
+    def post(self, request):
+        donations = request.POST.getlist('donation')
+        for i in range(len(donations)):
+            try:
+                donations[i] = int(donations[i])
+                Gift.objects.filter(pk=donations[i]).update(picked_up=True, picked_up_date=datetime.date.today())
+            except ValueError:
+                return self.get(request)
+        return self.get(request)
+
 
 class DonationDetailsView(LoginRequiredMixin, View):
     login_url = 'login'
