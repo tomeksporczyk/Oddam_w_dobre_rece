@@ -1,13 +1,12 @@
 from django.contrib.auth import authenticate, login, update_session_auth_hash, logout
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import EmailMessage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.template.loader import render_to_string
 from django.urls import reverse_lazy
-from django.utils.encoding import force_bytes, force_text
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_text
+from django.utils.http import urlsafe_base64_decode
 from django.views import View
 import datetime
 from OWDR.forms import *
@@ -88,54 +87,6 @@ def activate(request, uidb64, token):
         return render(request, 'OWDR/activation.html')
     else:
         return HttpResponse('Nie poprawny link walidacyjny!')
-
-
-class ResetPasswordView(View):
-    def get(self, request, message=''):
-        form = ResetPasswordForm
-        return render(request, 'OWDR/uni_form.html', context={'form': form, 'submit': 'Resetuj hasło', 'message': message})
-
-    def post(self, request):
-        form = ResetPasswordForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data.get('email')
-            user = User.objects.filter(email=email, is_active=True)
-            if user.exists():
-                mail = create_email_message(get_current_site(request),
-                                            "Reset hasła w OWDR",
-                                            'OWDR/reset_password_email.html',
-                                            user[0],
-                                            user[0].email)
-                mail.send()
-                return redirect(reverse_lazy('landing_page'))
-            return self.get(request, message='Konto nie istnieje lub nie jest aktywne')
-
-
-# class ResetPasswordConfirmView(View):
-#     """todo: HASH THAT PASSWORD!!!"""
-#     def get(self, request, uidb64, token):
-#         try:
-#             uid = force_text(urlsafe_base64_decode(uidb64))
-#             user = User.objects.get(pk=uid)
-#         except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-#             user = None
-#         if user is not None and account_activation_token.check_token(user, token):
-#             form = ResetPasswordConfirmForm()
-#             return render(request, 'OWDR/uni_form.html', context={'form': form, 'submit': 'Zmień hasło'})
-#         else:
-#             return HttpResponse('Nie poprawny link walidacyjny!')
-#
-#     def post(self, request, uidb64, token):
-#         form = ResetPasswordConfirmForm(request.POST)
-#         uid = force_text(urlsafe_base64_decode(uidb64))
-#         user = User.objects.get(pk=uid)
-#         if form.is_valid():
-#             user.password = form.cleaned_data.get('password')
-#             user.save()
-#             update_session_auth_hash(request, user=user)
-#             return redirect(reverse_lazy('login'))
-#         else:
-#             return HttpResponse("Coś poszło nie tak!")
 
 
 class UserProfileView(LoginRequiredMixin, View):

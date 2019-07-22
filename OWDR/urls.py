@@ -1,7 +1,6 @@
 
 from django.conf.urls import url
 from django.contrib.auth import views as auth_views
-from rest_framework import routers
 from django.urls import path, reverse_lazy
 
 from OWDR.views import LandingPageView, LoginView, LogoutView, RegisterView, UserProfileView, EditProfileView, \
