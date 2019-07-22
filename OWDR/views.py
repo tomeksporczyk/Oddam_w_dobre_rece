@@ -81,7 +81,7 @@ def activate(request, uidb64, token):
         user = User.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
-    if user is not None and account_activation_token.check_token(user, token):
+    if user is not None and user.is_active != True and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
         login(request, user)
@@ -111,31 +111,31 @@ class ResetPasswordView(View):
             return self.get(request, message='Konto nie istnieje lub nie jest aktywne')
 
 
-class ResetPasswordConfirmView(View):
-    """todo: HASH THAT PASSWORD!!!"""
-    def get(self, request, uidb64, token):
-        try:
-            uid = force_text(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=uid)
-        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-            user = None
-        if user is not None and account_activation_token.check_token(user, token):
-            form = ResetPasswordConfirmForm()
-            return render(request, 'OWDR/uni_form.html', context={'form': form, 'submit': 'Zmień hasło'})
-        else:
-            return HttpResponse('Nie poprawny link walidacyjny!')
-
-    def post(self, request, uidb64, token):
-        form = ResetPasswordConfirmForm(request.POST)
-        uid = force_text(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-        if form.is_valid():
-            user.password = form.cleaned_data.get('password')
-            user.save()
-            update_session_auth_hash(request, user=user)
-            return redirect(reverse_lazy('login'))
-        else:
-            return HttpResponse("Coś poszło nie tak!")
+# class ResetPasswordConfirmView(View):
+#     """todo: HASH THAT PASSWORD!!!"""
+#     def get(self, request, uidb64, token):
+#         try:
+#             uid = force_text(urlsafe_base64_decode(uidb64))
+#             user = User.objects.get(pk=uid)
+#         except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+#             user = None
+#         if user is not None and account_activation_token.check_token(user, token):
+#             form = ResetPasswordConfirmForm()
+#             return render(request, 'OWDR/uni_form.html', context={'form': form, 'submit': 'Zmień hasło'})
+#         else:
+#             return HttpResponse('Nie poprawny link walidacyjny!')
+#
+#     def post(self, request, uidb64, token):
+#         form = ResetPasswordConfirmForm(request.POST)
+#         uid = force_text(urlsafe_base64_decode(uidb64))
+#         user = User.objects.get(pk=uid)
+#         if form.is_valid():
+#             user.password = form.cleaned_data.get('password')
+#             user.save()
+#             update_session_auth_hash(request, user=user)
+#             return redirect(reverse_lazy('login'))
+#         else:
+#             return HttpResponse("Coś poszło nie tak!")
 
 
 class UserProfileView(LoginRequiredMixin, View):

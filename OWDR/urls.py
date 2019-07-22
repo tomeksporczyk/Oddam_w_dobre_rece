@@ -1,12 +1,11 @@
 
 from django.conf.urls import url
-
+from django.contrib.auth import views as auth_views
 from rest_framework import routers
-from django.urls import path
+from django.urls import path, reverse_lazy
 
 from OWDR.views import LandingPageView, LoginView, LogoutView, RegisterView, UserProfileView, EditProfileView, \
-    ChangePasswordView, FormView, MyDonationsView, DonationDetailsView, activate, ResetPasswordView, \
-    ResetPasswordConfirmView
+    ChangePasswordView, FormView, MyDonationsView, DonationDetailsView, activate
 
 urlpatterns = [
     path('', LandingPageView.as_view(), name='landing_page'),
@@ -21,7 +20,13 @@ urlpatterns = [
     path('donations/<int:pk>', DonationDetailsView.as_view(), name='donation_details'),
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         activate, name='activate'),
-    path('reset_password', ResetPasswordView.as_view(), name='reset_password'),
-    url(r'^reset_password/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-        ResetPasswordConfirmView.as_view(), name='reset_password_confirm'),
+    url(r'^user/reset/password/$',
+        auth_views.PasswordResetView.as_view(template_name='OWDR/reset_password.html',
+                                             success_url=reverse_lazy('user_reset_password_done')),
+        name='user_reset_password'),
+    url(r'^user/reset/password/done/$', auth_views.PasswordResetDoneView.as_view(), name='user_reset_password_done'),
+    url(r'^user/reset/password/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
+        auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    url(r'^user/reset/password/complete/$', auth_views.PasswordResetCompleteView.as_view(),
+        name='password_reset_complete'),
 ]
