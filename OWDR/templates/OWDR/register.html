@@ -5,15 +5,6 @@
       <form method="post">
           {% csrf_token %}
           {{ form }}
-{#        <div class="form-group">#}
-{#          <input type="email" name="email" placeholder="Email" />#}
-{#        </div>#}
-{#        <div class="form-group">#}
-{#          <input type="password" name="password" placeholder="Hasło" />#}
-{#        </div>#}
-{#        <div class="form-group">#}
-{#          <input type="password" name="password2" placeholder="Powtórz hasło" />#}
-{#        </div>#}
           <div class="form-group form-group--buttons">
           <input type="submit" value="Załóż konto" class="btn">
           <a href="/login" class="btn btn--without-border">Zaloguj się</a>

@@ -165,3 +165,5 @@ REST_FRAMEWORK = {
 
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
+
+LOGIN_URL = '/login'
